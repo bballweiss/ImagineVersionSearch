@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script>
+    var app = angular.module("softwareVersions", []);
+    app.controller("softwareController", function ($scope, $http) {
+        $scope.softwares = [];
+
+        $scope.getSoftwares = function () {
+            $http.get("home/greatersoftware?input=" + $scope.inputVersion)
+                .then(function (response) {
+                    $scope.softwares = response.data;
+                });
+        }
+    });
+</script>
+
+<div ng-app="softwareVersions" ng-controller="softwareController">
+    <h1 class="display-4">Welcome</h1>
+    <p>Enter a version to search. Versions are stored as "[major].[minor].[patch]".</p>
+    <form ng-submit="getSoftwares()">
+        <input ng-model="inputVersion" required />
+        <button ng-disabled="!inputVersion" ng-click="getSoftwares()">Go</button>
+        <ul>
+            <li ng-repeat="software in softwares">{{software.name}}: {{software.version}}</li>
+        </ul>
+    </form>
+</div>
